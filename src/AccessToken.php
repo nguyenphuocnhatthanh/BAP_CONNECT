@@ -34,11 +34,11 @@ class AccessToken
             $q->where('device', $currentDevice)->first();
         }]);
 
-        if (! $devices = $user->devices->first()) {
+        if (! $devices = $user->devices) {
             throw new InvalidDeviceException('Device is invalid');
         }
 
-        return $devices;
+        return $devices->first();
     }
 
     /**
