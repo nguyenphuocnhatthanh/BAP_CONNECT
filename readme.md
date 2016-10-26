@@ -28,7 +28,12 @@ You'll need to publish all vendor assets:
     php artisan vendor:publish --provider="Bap\ConnectPlatform\ConnectPlatformServiceProvide"
 
 ```
-Or add `PLATFORM_URL` to `.env`
+And also run migrations
+```
+    php artisan migrate
+```
+
+And add `PLATFORM_URL` to `.env`
 ```
     PLATFORM_URL=my_url
     PLATFORM_GRANT=grant
