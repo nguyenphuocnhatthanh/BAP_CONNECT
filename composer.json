@@ -1,0 +1,27 @@
+{
+    "name": "bap/connect",
+    "description": "Connect BAP Platform for laravel 5.*",
+    "keywords": [
+        "laravel",
+        "laravel5",
+        "bap platform"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ThanhNguyen",
+            "email": "nguyenphuocnhatthanh@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">= 5.4.0",
+        "illuminate/support": "5.0.*|5.1.*|5.2.*|5.3.*",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bap\\ConnectPlatform\\": "src"
+        }
+    }
+}
