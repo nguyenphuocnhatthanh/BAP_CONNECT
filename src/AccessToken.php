@@ -2,6 +2,7 @@
 namespace Bap\ConnectPlatform;
 
 use Bap\ConnectPlatform\Exceptions\InvalidDeviceException;
+use Bap\ConnectPlatform\Exceptions\RequiredDeviceException;
 
 class AccessToken
 {
@@ -19,10 +20,15 @@ class AccessToken
      * @param null $currentDevice
      * @return mixed
      * @throws InvalidDeviceException
+     * @throws RequiredDeviceException
      */
     private function getCurrentDevice($currentDevice = null)
     {
         $currentDevice = $currentDevice ?: app('tymon.jwt.auth')->getPayload()->get('device');
+
+        if (is_null($currentDevice)) {
+            throw new RequiredDeviceException('Device is required');
+        }
 
         $user = $this->user()->load(['devices' => function($q) use($currentDevice) {
             $q->where('device', $currentDevice)->first();
