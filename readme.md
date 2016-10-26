@@ -42,11 +42,42 @@ And add `PLATFORM_URL` to `.env`
     PLATFORM_SCOPE=SCOPE
 ```
 
+#### Add relation devices and contract
+```php
+...
+use Bap\ConnectPlatform\Traits\WithDevices;
+use Bap\ConnectPlatform\Contracts\WithDevicesInterface;
+
+class User extends Model implements AuthenticatableContract,
+                                    AuthorizableContract,
+                                    CanResetPasswordContract,
+                                    WithDevicesInterface
+{
+    use Authenticatable,
+        Authorizable,
+        CanResetPassword,
+        RelationDevices;
+```
+
 # Usage
+* Add middleware jwt auth in `construsctor` method Controller:
+```php
+    public function __constructor()
+    {
+        $this->middleware('jwt.auth');
+    }
+```
 
-We need to set `access_token` of user before call method
+* Or app/Http/routes.php
+```php
+    Route::post('me', ['before' => 'jwt-auth', function() {
+        // Todo
+    }]);
+```
 
+* Add `device` to options claims for jwt
 
+## Profile
 ### Get profile
 Get user profile from Platform with options `$attributes = ['id', 'username', 'telephone']`
 
@@ -54,46 +85,60 @@ Get user profile from Platform with options `$attributes = ['id', 'username', 't
 <?php
 use ConnectPlatform;
    
-ConnectPlatform::make($accessToken)->profile(array $attributes);
+ConnectPlatform::profile(array $attributes);
 ```
 
 OR
 
 ```php
 <?php
-app('platform')->make($accessToken)->profile(array $attribuites);
+app('platform')->profile(array $attribuites);
 ```
 
+## Friend
 ### Get list a friend
 ```php
-ConnectPlatform::make($accessToken)->getFriends($uid);
+ConnectPlatform::getFriends($uid);
 ```
 
 ### Get list a friend has been block
 ```php
-ConnectPlatform::make($accessToken)->getBlockFriends($uid);
+ConnectPlatform::getBlockFriends($uid);
 ```
 
 ### Get list ID friend waiting request
 ```php
-ConnectPlatform::make($accessToken)->getListIdFriendWaiting($uid);
+ConnectPlatform::getListIdFriendWaiting($uid);
 ```
 
 ### Get list ID friend request 
 ```php
-ConnectPlatform::make($accessToken)->getListIdFriendRequest($uid);
+ConnectPlatform::getListIdFriendRequest($uid);
 ``````
 
-### Search Telephone
+### Check relation 
 ```php
-ConnectPlatform::make($accessToken)->searchTelephone($uid, array $params);
+ConnectPlatform::isFriend($uid, $friendUID)
 ``````
-###### With `$params = ['phone_code' => '', 'telephone' => '']` 
 
 ### Check list user is friend
 ```php
-ConnectPlatform::make($accessToken)->isFriends($uid, array $uids)
+ConnectPlatform::isFriends($uid, array $uids)
 ``````
+
 ###### With `$uids` is list `USER ID` of platform
 
+## Search
+
+### Search Telephone
+```php
+ConnectPlatform::searchTelephone($uid, array $params);
+``````
+###### With `$params = ['phone_code' => '', 'telephone' => '']` 
+
+
 #####With `$uid` is `ID` of platform
+
+
+#Config file
+You can change model, list devices, timeout request at config file.

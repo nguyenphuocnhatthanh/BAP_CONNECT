@@ -1,7 +1,7 @@
 <?php
 namespace Bap\ConnectPlatform\Contracts;
 
-interface WithDevices
+interface WithDevicesInterface
 {
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

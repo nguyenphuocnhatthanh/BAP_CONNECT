@@ -1,19 +1,23 @@
 <?php
 namespace Bap\ConnectPlatform\Contracts;
 
+use Bap\ConnectPlatform\Exceptions\PlatformException;
+
 interface ConnectPlatformInterface
 {
-    /**
-     * @param $accessToken
-     * @return $this
-     */
-    public function make($accessToken);
-
     /**
      * @param array $scopes
      * @return array
      */
     public function profile($scopes = []);
+
+    /**
+     * @param $uid
+     * @param $friendUID
+     * @return mixed
+     * @throws PlatformException
+     */
+    public function isFriend($uid, $friendUID);
 
     /**
      * @param $uid

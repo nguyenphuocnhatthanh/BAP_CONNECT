@@ -1,7 +1,7 @@
 <?php
 namespace Bap\ConnectPlatform\Traits;
 
-class WithDevices
+trait WithDevices
 {
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

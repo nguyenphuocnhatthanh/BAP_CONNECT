@@ -42,7 +42,7 @@ class AccessToken
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function get()
     {

@@ -36,17 +36,6 @@ class ConnectPlatform implements ConnectPlatformInterface
     }
 
     /**
-     * @param $accessToken
-     * @return $this
-     */
-    public function make($accessToken)
-    {
-        $this->accessToken = $accessToken;
-
-        return $this;
-    }
-
-    /**
      * @param array $scopes
      * @return array
      */
@@ -161,11 +150,30 @@ class ConnectPlatform implements ConnectPlatformInterface
 
         $result = $this->getData($request);
 
-        if (! isset($result->list_friends) || ! isset($result->total)) {
+        if (! isset($result->relation)) {
             throw new PlatformException('Server platform error');
         }
 
         return $result;
+    }
+
+    /**
+     * @param $uid
+     * @param $friendUID
+     * @return mixed
+     * @throws PlatformException
+     */
+    public function isFriend($uid, $friendUID)
+    {
+        $request = $this->get('/api/user/'.$uid.'/friend/'.$friendUID);
+
+        $result = $this->getData($request);
+
+        if (! isset($result->relation)) {
+            throw new PlatformException('Server platform error');
+        }
+
+        return $result->result;
     }
 
     /**
