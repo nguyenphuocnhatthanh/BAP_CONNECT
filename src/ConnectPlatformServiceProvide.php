@@ -29,7 +29,10 @@ class ConnectPlatformServiceProvide extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/platform.php', 'platform');
         $this->app->bind('platform', function($app) {
-            return new ConnectPlatform($app['config']['platform.url']);
+            return new ConnectPlatform(
+                $app['config']['platform.url'],
+                new AccessToken()
+            );
         });
     }
 

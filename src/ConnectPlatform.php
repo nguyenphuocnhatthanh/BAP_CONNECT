@@ -25,12 +25,14 @@ class ConnectPlatform implements ConnectPlatformInterface
 
     /**
      * Platform constructor.
+     * @param AccessToken $accessToken
      * @param $site
      */
-    public function __construct($site)
+    public function __construct(AccessToken $accessToken, $site)
     {
         $this->client = new Client();
         $this->site = $site;
+        $this->accessToken = $accessToken;
     }
 
     /**
@@ -223,7 +225,7 @@ class ConnectPlatform implements ConnectPlatformInterface
 
         return [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->accessToken
+                'Authorization' => 'Bearer '.$this->accessToken->get()
             ],
             'timeout'   => config('platform.request.timeout')
         ];

@@ -8,5 +8,9 @@ return [
     'scope'         => env('PLATFORM_SCOPE', ''),
     'request'       => [
         'timeout'   => 60 // Set timeout 60s
+    ],
+    'devices'       => [
+        'model'     => \Bap\ConnectPlatform\Models\Device::class,
+        'in'        => 'pc|mobile'
     ]
 ];
