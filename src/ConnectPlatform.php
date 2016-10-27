@@ -163,7 +163,7 @@ class ConnectPlatform implements ConnectPlatformInterface
      * @return mixed
      * @throws PlatformException
      */
-    public function isFriend($uid, $friendUID)
+    public function getRelation($uid, $friendUID)
     {
         $request = $this->get('/api/user/'.$uid.'/friend/'.$friendUID);
 
@@ -173,7 +173,7 @@ class ConnectPlatform implements ConnectPlatformInterface
             throw new PlatformException('Server platform error');
         }
 
-        return $result->result;
+        return $result->relation;
     }
 
     /**

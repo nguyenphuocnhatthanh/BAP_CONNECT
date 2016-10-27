@@ -17,7 +17,7 @@ interface ConnectPlatformInterface
      * @return mixed
      * @throws PlatformException
      */
-    public function isFriend($uid, $friendUID);
+    public function getRelation($uid, $friendUID);
 
     /**
      * @param $uid

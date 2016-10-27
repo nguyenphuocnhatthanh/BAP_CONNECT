@@ -116,9 +116,9 @@ ConnectPlatform::getListIdFriendWaiting($uid);
 ConnectPlatform::getListIdFriendRequest($uid);
 ``````
 
-### Check relation 
+### Get relation 
 ```php
-ConnectPlatform::isFriend($uid, $friendUID)
+ConnectPlatform::getRelation($uid, $friendUID)
 ``````
 
 ### Check list user is friend
