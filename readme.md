@@ -126,6 +126,11 @@ ConnectPlatform::getRelation($uid, $friendUID)
 ConnectPlatform::isFriends($uid, array $uids)
 ``````
 
+### Check relation list friend
+```php
+ConnectPlatform::checkListFriends($uid, array $uids)
+``````
+
 ###### With `$uids` is list `USER ID` of platform
 
 ## Search
