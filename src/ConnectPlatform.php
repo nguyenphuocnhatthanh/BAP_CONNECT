@@ -207,17 +207,13 @@ class ConnectPlatform implements ConnectPlatformInterface
      */
     public function checkListFriends($uid, array $uids)
     {
-        $request = $this->get('/api/user/'.$uid.'/friend/check_list', [
+        $request = $this->post('/api/user/'.$uid.'/friend/check_list', [
             'json'  => ['list_friends' => $uids]
         ]);
 
         $result = $this->getData($request);
 
-        if (! isset($result->data)) {
-            throw new PlatformException('Server platform error');
-        }
-
-        return $result->data;
+        return $result;
     }
 
     /**
