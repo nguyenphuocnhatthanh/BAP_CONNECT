@@ -141,6 +141,36 @@ ConnectPlatform::searchTelephone($uid, array $params);
 ``````
 ###### With `$params = ['phone_code' => '', 'telephone' => '']` 
 
+## Coin
+### Get History
+```php
+ConnectPlatform::getHistoryCoin($uid, $action);
+``````
+With `$action in array ['request', 'payment', 'withraw']`  
+
+### Exchange
+```php
+ConnectPlatform::exchange($uid, $action, array $params);
+``````
+With `$action in array ['money_coin', 'coin_money']` and `$params = ['src' => '' , 'des' => '']`
+
+### Request
+```php
+ConnectPlatform::requestCoin($uid, $coin);
+``````
+### Withraw money
+```php
+ConnectPlatform::withRawMoney($uid, $money);
+``````
+### Get token payment
+```php
+ConnectPlatform::getPaymentToken($uid);
+``````
+### Send payment
+```php
+ConnectPlatform::requestPayment($uid, array $params);
+``````
+With `$params = ['item_id' => '' , 'item_value' => '', 'token' => '']`
 
 #####With `$uid` is `ID` of platform
 

@@ -67,4 +67,70 @@ interface ConnectPlatformInterface
      * @return mixed
      */
     public function isFriends($uid, array $uids);
+
+    /**
+     * Get current coin
+     *
+     * @param $uid
+     * @return array
+     */
+    public function getCoin($uid);
+
+    /**
+     * Get history transaction coin
+     *
+     * @param $uid
+     * @param $action
+     * @return array
+     * @throws \Bap\ConnectPlatform\Exceptions\PlatformActionHistoryException
+     * @throws PlatformException
+     */
+    public function getHistoryCoin($uid, $action);
+
+    /**
+     * Exchange money <-> coin
+     *
+     * @param $uid
+     * @param $action
+     * @param array $params
+     * @return mixed
+     * @throws \Bap\ConnectPlatform\Exceptions\PlatformActionHistoryException
+     * @throws PlatformException
+     * @throws \Bap\ConnectPlatform\Exceptions\PlatformParamsException
+     */
+    public function exchange($uid, $action, array $params);
+
+    /**
+     * Send request coin
+     *
+     * @param $uid
+     * @param $coin
+     * @return array
+     */
+    public function requestCoin($uid, $coin);
+
+    /**
+     * Send request withraw money
+     *
+     * @param $uid
+     * @param $money
+     * @return array
+     */
+    public function withRawMoney($uid, $money);
+
+    /**
+     * Get token payment
+     *
+     * @param $uid
+     */
+    public function getPaymentToken($uid);
+
+    /**
+     * Send payment
+     *
+     * @param $uid
+     * @param array $params
+     * @return array
+     */
+    public function requestPayment($uid, array $params);
 }

@@ -4,7 +4,9 @@ namespace Bap\ConnectPlatform;
 
 use Bap\ConnectPlatform\Contracts\ConnectPlatformInterface;
 use Bap\ConnectPlatform\Exceptions\PlatformAccessTokenInvalid;
+use Bap\ConnectPlatform\Exceptions\PlatformActionHistoryException;
 use Bap\ConnectPlatform\Exceptions\PlatformException;
+use Bap\ConnectPlatform\Exceptions\PlatformParamsException;
 use GuzzleHttp\Client;
 
 class ConnectPlatform implements ConnectPlatformInterface
@@ -18,10 +20,21 @@ class ConnectPlatform implements ConnectPlatformInterface
      * @var string
      */
     private $accessToken;
+
     /**
      * @var
      */
     private $site;
+
+    /**
+     * @var array
+     */
+    private $actionHistory = ['request', 'payment', 'withraw'];
+
+    /**
+     * @var array
+     */
+    private $actionExchange = ['money_coin', 'coin_money'];
 
     /**
      * Platform constructor.
@@ -211,9 +224,150 @@ class ConnectPlatform implements ConnectPlatformInterface
             'json'  => ['list_friends' => $uids]
         ]);
 
+        return $this->getData($request);
+    }
+
+    /**
+     * @param $uid
+     * @return array
+     */
+    public function getCoin($uid)
+    {
+        $request = $this->get('/api/coin/' . $uid);
+
+        return $this->getData($request);
+    }
+
+    /**
+     * @param $uid
+     * @param $action
+     * @return array
+     * @throws PlatformActionHistoryException
+     * @throws PlatformException
+     */
+    public function getHistoryCoin($uid, $action)
+    {
+        if (! in_array($action, $this->actionHistory)) {
+            throw new PlatformActionHistoryException('Action History is invalid');
+        }
+
+        $request = $this->get('/api/coin/' . $uid. '/history/'. $action);
         $result = $this->getData($request);
 
+        if (! isset($result->total, $result->items)) {
+            throw new PlatformException('Server platform error');
+        }
+
         return $result;
+    }
+
+    /**
+     * @param $uid
+     * @param $action
+     * @param array $params
+     * @return mixed
+     * @throws PlatformActionHistoryException
+     * @throws PlatformException
+     * @throws PlatformParamsException
+     */
+    public function exchange($uid, $action, array $params)
+    {
+        if (! in_array($action, $this->actionExchange)) {
+            throw new PlatformActionHistoryException('Exchange Action is invalid');
+        }
+        if (empty($params['src']) || $params['des']) {
+            throw new PlatformParamsException('Missing param `srs` or `des`');
+        }
+
+        $request = $this->post('/api/coin/'. $uid .'/'.$action, [
+            'json' => [
+                'src' => $params['src'],
+                'des' => $params['des'],
+            ]
+        ]);
+        $result = $this->getData($request);
+
+        if (! isset($result->resut)) {
+            throw new PlatformException('Server platform error');
+        }
+
+        return $result->result;
+    }
+
+    /**
+     * @param $uid
+     * @param $coin
+     * @return array
+     */
+    public function requestCoin($uid, $coin)
+    {
+        $request = $this->post('/api/coin/'. $uid .'/request', [
+            'json'  => [
+                'client_id' => config('platform.client_id'),
+                'value'     => $coin
+            ]
+        ]);
+
+        return $this->getData($request);
+    }
+
+    /**
+     * @param $uid
+     * @param $money
+     * @return array
+     */
+    public function withRawMoney($uid, $money)
+    {
+        $request = $this->post('/api/coin/'. $uid .'/withdraw', [
+            'json'  => [
+                'client_id' => config('platform.client_id'),
+                'value'     => $money
+            ]
+        ]);
+
+        return $this->getData($request);
+    }
+
+    /**
+     * @param $uid
+     */
+    public function getPaymentToken($uid)
+    {
+        $currentTime = time();
+        $dataHash = config('platform.client_id'). config('platform.client_secret') . $currentTime;
+
+        $this->post('/api/coin/'. $uid .'/payment/token', [
+            'json'  => [
+                'hash'      => base64_encode(hash_hmac('SHA256', $dataHash, 'payment_token')),
+                'type'      => 'payment_token',
+                'callback'  => config('platform.url_callback'),
+                'time'      => $currentTime
+            ]
+        ]);
+    }
+
+    /**
+     * @param $uid
+     * @param array $params
+     * @return array
+     * @throws PlatformParamsException
+     */
+    public function requestPayment($uid, array $params)
+    {
+        if (empty($params['item_id']) || $params['item_value'] || $params['token']) {
+            throw new PlatformParamsException('Missing param `item_id` or `item_value` or `token`');
+        }
+
+        $request = $this->post('/api/coin/'. $uid .'/payment', [
+            'json' => [
+                'item_id'    => $params['item_id'],
+                'item_value' => $params['item_value'],
+                'client_id'  => config('platform.client_id'),
+                'token'      => $params['token'],
+            ]
+        ]);
+
+        return $this->getData($request);
     }
 
     /**
