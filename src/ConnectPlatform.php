@@ -431,7 +431,7 @@ class ConnectPlatform implements ConnectPlatformInterface
     {
         $data = json_decode($this->getResponse($request));
 
-        if (is_null($data) || 200 !== $data->status) {
+        if (is_null($data)) {
             throw new PlatformException('Server platform error');
         }
         if ($scopes) {
