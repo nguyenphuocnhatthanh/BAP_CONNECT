@@ -287,7 +287,7 @@ class ConnectPlatform implements ConnectPlatformInterface
         ]);
         $result = $this->getData($request);
 
-        if (! isset($result->resut)) {
+        if (! isset($result->result)) {
             throw new PlatformException('Server platform error');
         }
 
