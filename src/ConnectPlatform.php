@@ -275,7 +275,7 @@ class ConnectPlatform implements ConnectPlatformInterface
         if (! in_array($action, $this->actionExchange)) {
             throw new PlatformActionHistoryException('Exchange Action is invalid');
         }
-        if (empty($params['src']) || $params['des']) {
+        if (empty($params['src']) || empty($params['des'])) {
             throw new PlatformParamsException('Missing param `srs` or `des`');
         }
 
