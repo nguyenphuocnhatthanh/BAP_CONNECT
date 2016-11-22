@@ -279,7 +279,7 @@ class ConnectPlatform implements ConnectPlatformInterface
             throw new PlatformParamsException('Missing param `srs` or `des`');
         }
 
-        $request = $this->post('/api/coin/'. $uid .'/'.$action, [
+        $request = $this->post('/api/coin/'. $uid .'/exchange/'.$action, [
             'json' => [
                 'src' => $params['src'],
                 'des' => $params['des'],
