@@ -6,6 +6,7 @@ use Bap\ConnectPlatform\Contracts\ConnectPlatformInterface;
 use Bap\ConnectPlatform\Exceptions\PlatformAccessTokenInvalid;
 use Bap\ConnectPlatform\Exceptions\PlatformActionHistoryException;
 use Bap\ConnectPlatform\Exceptions\PlatformException;
+use Bap\ConnectPlatform\Exceptions\PlatformGetTokenException;
 use Bap\ConnectPlatform\Exceptions\PlatformParamsException;
 use GuzzleHttp\Client;
 
@@ -326,29 +327,6 @@ class ConnectPlatform implements ConnectPlatformInterface
 
     /**
      * @param $uid
-     */
-    public function getPaymentToken($uid)
-    {
-        $currentTime = time();
-        $dataHash = sprintf(
-            '%s.%s.payment_token.%s',
-            config('platform.client_id'),
-            config('platform.client_secret'),
-            $currentTime
-        );
-
-        $this->post('/api/coin/'. $uid .'/payment/token', [
-            'json'  => [
-                'hash'      => base64_encode(hash_hmac('SHA256', $dataHash, 'payment_token')),
-                'type'      => 'payment_token',
-                'callback'  => config('platform.url_callback'),
-                'time'      => $currentTime
-            ]
-        ]);
-    }
-
-    /**
-     * @param $uid
      * @param array $params
      * @return array
      * @throws PlatformParamsException
@@ -365,11 +343,45 @@ class ConnectPlatform implements ConnectPlatformInterface
                 'item_value'    => $params['item_value'],
                 'item_cat_id'   => $params['item_cat_id'],
                 'client_id'     => config('platform.client_id'),
-                'token'         => $params['token'],
+                'token'         => $this->getPaymentToken($uid)
             ]
         ]);
 
         return $this->getData($request);
+    }
+
+    /**
+     * Get payment token
+     *
+     * @param $uid
+     * @return
+     * @throws PlatformGetTokenException
+     */
+    private function getPaymentToken($uid)
+    {
+        $currentTime = time();
+        $dataHash = sprintf(
+            '%s.%s.payment_token.%s',
+            config('platform.client_id'),
+            config('platform.client_secret'),
+            $currentTime
+        );
+
+        $request = $this->post('/api/coin/'. $uid .'/payment/token', [
+            'json'  => [
+                'hash'      => base64_encode(hash_hmac('SHA256', $dataHash, 'payment_token')),
+                'type'      => 'payment_token',
+                'callback'  => config('platform.url_callback'),
+                'time'      => $currentTime
+            ]
+        ]);
+        $response = $this->getResponse($request);
+
+        if (400 === $response->status) {
+            throw new PlatformGetTokenException('Error when get payment token!', 400);
+        }
+
+        return $response->data->token;
     }
 
     /**

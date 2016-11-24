@@ -119,13 +119,6 @@ interface ConnectPlatformInterface
     public function withDrawMoney($uid, $money);
 
     /**
-     * Get token payment
-     *
-     * @param $uid
-     */
-    public function getPaymentToken($uid);
-
-    /**
      * Send payment
      *
      * @param $uid
