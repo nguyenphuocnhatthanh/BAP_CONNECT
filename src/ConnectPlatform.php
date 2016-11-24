@@ -449,7 +449,7 @@ class ConnectPlatform implements ConnectPlatformInterface
         }
 
         if (! in_array($data->status, $this->statusSuccess)) {
-            throw new PlatformException($data->messages, $data->status);
+            throw new PlatformException($data->message, $data->status);
         }
 
         return $data->data;
