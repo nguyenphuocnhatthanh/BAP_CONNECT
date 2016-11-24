@@ -38,6 +38,11 @@ class ConnectPlatform implements ConnectPlatformInterface
     private $actionExchange = ['money_coin', 'coin_money'];
 
     /**
+     * @var array
+     */
+    private $statusSuccess = [200, 201];
+
+    /**
      * Platform constructor.
      * @param AccessToken $accessToken
      * @param $site
@@ -232,7 +237,7 @@ class ConnectPlatform implements ConnectPlatformInterface
     {
         $request = $this->get('/api/coin/' . $uid);
 
-        return $this->getData($request);
+        return $this->getDataOrThrowException($request);
     }
 
     /**
@@ -295,6 +300,7 @@ class ConnectPlatform implements ConnectPlatformInterface
      * @param $uid
      * @param $coin
      * @return array
+     * @throws PlatformException
      */
     public function requestCoin($uid, $coin)
     {
@@ -305,13 +311,14 @@ class ConnectPlatform implements ConnectPlatformInterface
             ]
         ]);
 
-        return $this->getData($request);
+        return $this->getDataOrThrowException($request);
     }
 
     /**
      * @param $uid
      * @param $money
      * @return array
+     * @throws PlatformException
      */
     public function withDrawMoney($uid, $money)
     {
@@ -322,18 +329,19 @@ class ConnectPlatform implements ConnectPlatformInterface
             ]
         ]);
 
-        return $this->getData($request);
+        return $this->getDataOrThrowException($request);
     }
 
     /**
      * @param $uid
      * @param array $params
      * @return array
+     * @throws PlatformException
      * @throws PlatformParamsException
      */
     public function requestPayment($uid, array $params)
     {
-        if (! isset($params['item_id'], $params['item_cat_id']) || empty($params['item_value']) || empty($params['token'])) {
+        if (! isset($params['item_id'], $params['item_cat_id']) || empty($params['item_value'])) {
             throw new PlatformParamsException('Missing param `item_id` or `item_cat_id` or `item_value` or `token`');
         }
 
@@ -347,7 +355,7 @@ class ConnectPlatform implements ConnectPlatformInterface
             ]
         ]);
 
-        return $this->getData($request);
+        return $this->getDataOrThrowException($request);
     }
 
     /**
@@ -355,7 +363,7 @@ class ConnectPlatform implements ConnectPlatformInterface
      *
      * @param $uid
      * @return
-     * @throws PlatformGetTokenException
+     * @throws PlatformException
      */
     private function getPaymentToken($uid)
     {
@@ -375,13 +383,9 @@ class ConnectPlatform implements ConnectPlatformInterface
                 'time'      => $currentTime
             ]
         ]);
-        $response = $this->getResponse($request);
+        $data = $this->getDataOrThrowException($request);
 
-        if (400 === $response->status) {
-            throw new PlatformGetTokenException('Error when get payment token!', 400);
-        }
-
-        return $response->data->token;
+        return $data->token;
     }
 
     /**
@@ -433,6 +437,26 @@ class ConnectPlatform implements ConnectPlatformInterface
     private function getResponse($request)
     {
         return $request->getBody()->getContents();
+    }
+
+    /**
+     * @param $request
+     * @return mixed
+     * @throws PlatformException
+     */
+    private function getDataOrThrowException($request)
+    {
+        $data = json_decode($this->getResponse($request));
+
+        if (is_null($data)) {
+            throw new PlatformException('Server platform error');
+        }
+
+        if (! in_array($data->status, $this->statusSuccess)) {
+            throw new PlatformException($data->messages, $data->status);
+        }
+
+        return $data->data;
     }
 
     /**
