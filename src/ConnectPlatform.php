@@ -341,15 +341,11 @@ class ConnectPlatform implements ConnectPlatformInterface
      */
     public function requestPayment($uid, array $params)
     {
-        if (! isset($params['item_id'], $params['item_cat_id']) || empty($params['item_value'])) {
-            throw new PlatformParamsException('Missing param `item_id` or `item_cat_id` or `item_value` or `token`');
-        }
-
         $request = $this->post('/api/coin/'. $uid .'/payment', [
             'json' => [
-                'item_id'       => $params['item_id'],
-                'item_value'    => $params['item_value'],
-                'item_cat_id'   => $params['item_cat_id'],
+                'item_id'       => ! empty($params['item_id']) ? $params['item_id'] : null,
+                'item_value'    => ! empty($params['item_value']) ? $params['item_value'] : null,
+                'item_cat_id'   => ! empty($params['item_cat_id']) ? $params['item_cat_id'] : null,
                 'client_id'     => config('platform.client_id'),
                 'token'         => $this->getPaymentToken($uid)
             ]
