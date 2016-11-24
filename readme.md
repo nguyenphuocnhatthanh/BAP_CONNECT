@@ -176,7 +176,7 @@ ConnectPlatform::getPaymentToken($uid);
 ```php
 ConnectPlatform::requestPayment($uid, array $params);
 ``````
-With `$params = ['item_id' => '' , 'item_value' => '', 'token' => '']`
+With `$params = ['item_id' => '' , 'cat_id' => '', 'item_value' => '', 'token' => '']`
 
 #####With `$uid` is `ID` of platform
 
