@@ -110,13 +110,13 @@ interface ConnectPlatformInterface
     public function requestCoin($uid, $coin);
 
     /**
-     * Send request withraw money
+     * Send request withdraw money
      *
      * @param $uid
      * @param $money
      * @return array
      */
-    public function withRawMoney($uid, $money);
+    public function withDrawMoney($uid, $money);
 
     /**
      * Get token payment

@@ -29,7 +29,7 @@ class ConnectPlatform implements ConnectPlatformInterface
     /**
      * @var array
      */
-    private $actionHistory = ['request', 'payment', 'withraw'];
+    private $actionHistory = ['request', 'payment', 'withdraw'];
 
     /**
      * @var array
@@ -312,7 +312,7 @@ class ConnectPlatform implements ConnectPlatformInterface
      * @param $money
      * @return array
      */
-    public function withRawMoney($uid, $money)
+    public function withDrawMoney($uid, $money)
     {
         $request = $this->post('/api/coin/'. $uid .'/withdraw', [
             'json'  => [

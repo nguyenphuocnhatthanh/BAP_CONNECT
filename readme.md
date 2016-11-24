@@ -142,11 +142,17 @@ ConnectPlatform::searchTelephone($uid, array $params);
 ###### With `$params = ['phone_code' => '', 'telephone' => '']` 
 
 ## Coin
+
+### Get asset
+```php
+ConnectPlatform::getCoin($uid);
+``````
+
 ### Get History
 ```php
 ConnectPlatform::getHistoryCoin($uid, $action);
 ``````
-With `$action in array ['request', 'payment', 'withraw']`  
+With `$action in array ['request', 'payment', 'withdraw']`  
 
 ### Exchange
 ```php
@@ -158,9 +164,9 @@ With `$action in array ['money_coin', 'coin_money']` and `$params = ['src' => ''
 ```php
 ConnectPlatform::requestCoin($uid, $coin);
 ``````
-### Withraw money
+### Withdraw money
 ```php
-ConnectPlatform::withRawMoney($uid, $money);
+ConnectPlatform::withDrawMoney($uid, $money);
 ``````
 ### Get token payment
 ```php
