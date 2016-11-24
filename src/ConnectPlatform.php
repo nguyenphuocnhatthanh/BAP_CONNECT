@@ -330,7 +330,12 @@ class ConnectPlatform implements ConnectPlatformInterface
     public function getPaymentToken($uid)
     {
         $currentTime = time();
-        $dataHash = config('platform.client_id'). config('platform.client_secret') . $currentTime;
+        $dataHash = sprintf(
+            '%s.%s.payment_token.%s',
+            config('platform.client_id'),
+            config('platform.client_secret'),
+            $currentTime
+        );
 
         $this->post('/api/coin/'. $uid .'/payment/token', [
             'json'  => [
