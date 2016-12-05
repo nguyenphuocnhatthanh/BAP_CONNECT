@@ -69,6 +69,20 @@ interface ConnectPlatformInterface
     public function isFriends($uid, array $uids);
 
     /**
+     * @param $uid
+     * @param $friendUid
+     * @return array
+     */
+    public function sendFriendRequest($uid, $friendUid);
+
+    /**
+     * @param $uid
+     * @param $friendUid
+     * @return array
+     */
+    public function approveFriendRequest($uid, $friendUid);
+
+    /**
      * Get current coin
      *
      * @param $uid

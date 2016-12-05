@@ -131,6 +131,16 @@ ConnectPlatform::isFriends($uid, array $uids)
 ConnectPlatform::checkListFriends($uid, array $uids)
 ``````
 
+### Send friend request
+```php
+ConnectPlatform::sendFriendRequest($uid, $friendUid);
+``````
+
+### Approve friend request
+```php
+ConnectPlatform::approveFriendRequest($uid, $friendUid);
+``````
+
 ###### With `$uids` is list `USER ID` of platform
 
 ## Search

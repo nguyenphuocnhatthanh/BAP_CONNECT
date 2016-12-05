@@ -6,7 +6,6 @@ use Bap\ConnectPlatform\Contracts\ConnectPlatformInterface;
 use Bap\ConnectPlatform\Exceptions\PlatformAccessTokenInvalid;
 use Bap\ConnectPlatform\Exceptions\PlatformActionHistoryException;
 use Bap\ConnectPlatform\Exceptions\PlatformException;
-use Bap\ConnectPlatform\Exceptions\PlatformGetTokenException;
 use Bap\ConnectPlatform\Exceptions\PlatformParamsException;
 use GuzzleHttp\Client;
 
@@ -231,6 +230,30 @@ class ConnectPlatform implements ConnectPlatformInterface
 
     /**
      * @param $uid
+     * @param $friendUid
+     * @return array
+     */
+    public function sendFriendRequest($uid, $friendUid)
+    {
+        $request = $this->post('/api/user/'. $uid. '/friend/' .$friendUid. '/request');
+
+        return $this->getData($request);
+    }
+
+    /**
+     * @param $uid
+     * @param $friendUid
+     * @return array
+     */
+    public function approveFriendRequest($uid, $friendUid)
+    {
+        $request = $this->put('/api/user/'. $uid. '/friend/' .$friendUid. '/approve');
+
+        return $this->getData($request);
+    }
+    
+    /**
+     * @param $uid
      * @return array
      */
     public function getCoin($uid)
@@ -406,6 +429,18 @@ class ConnectPlatform implements ConnectPlatformInterface
         $options = array_merge($this->setAuth(), $options);
 
         return $this->client->post($this->site.$url, $options);
+    }
+
+    /**
+     * @param $url
+     * @param array $options
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    private function put($url, $options = [])
+    {
+        $options = array_merge($this->setAuth(), $options);
+
+        return $this->client->put($this->site.$url, $options);
     }
 
     /**
